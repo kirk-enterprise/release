@@ -3,6 +3,46 @@
 ROOT=$(unset CDPATH && cd $(dirname "${BASH_SOURCE[0]}")/.. && pwd)
 cd $ROOT
 
+function usage() {
+    cat <<EOF
+Usage: $(basename $0) -v x.x.x+ke.xxxxxxx -r n
+
+Examples:
+
+    $(basename $0) -v 1.7.3+ke.abc1234 -r 0
+EOF
+}
+
+KUBE_VERSION=""
+PKG_REVISION=""
+
+while getopts "h?v:r:" opt; do
+    case "$opt" in
+    h|\?)
+        usage
+        exit 0
+        ;;  
+    v)  
+        KUBE_VERSION="${OPTARG}"
+        ;;
+    r)
+        PKG_REVISION="${OPTARG}"
+        ;;
+    esac
+done
+
+if [[ ! "$PKG_REVISION" =~ ^[0-9]{1,2}$ ]]; then
+    echo "error: invalid pkg revision, should be a number, range from 0-99, e.g. 0, 1, 2."
+    usage
+    exit 1
+fi
+
+if [[ ! "$KUBE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+\+ke\.[0-9a-z]{7}$ ]]; then
+    echo "error: invalid kube revision, should be in format '[0-9]+\.[0-9]+\.[0-9]+\+ke\.[0-9a-z]{7}', e.g. 1.7.3+ke.db42f96."
+    usage
+    exit 2
+fi
+
 docker build --tag=debian-packager debian 
 docker run --volume="$(pwd)/debian:/src" --volume="${GOPATH}/src/k8s.io/kubernetes:/kubernetes" debian-packager \
-    -arch amd64 $@
+    -arch amd64 --kube-version $KUBE_VERSION --pkg-revision $PKG_REVISION
