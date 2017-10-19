@@ -37,12 +37,6 @@ if [[ ! "$PKG_REVISION" =~ ^[0-9]{1,2}$ ]]; then
     exit 1
 fi
 
-if [[ ! "$KUBE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+\+ke\.[0-9a-z]{7}$ ]]; then
-    echo "error: invalid kube revision, should be in format '[0-9]+\.[0-9]+\.[0-9]+\+ke\.[0-9a-z]{7}', e.g. 1.7.3+ke.db42f96."
-    usage
-    exit 2
-fi
-
 docker build --tag=debian-packager debian 
 docker run --volume="$(pwd)/debian:/src" --volume="${GOPATH}/src/k8s.io/kubernetes:/kubernetes" debian-packager \
     -arch amd64 --kube-version $KUBE_VERSION --pkg-revision $PKG_REVISION
