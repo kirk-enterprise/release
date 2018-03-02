@@ -25,8 +25,8 @@ while getopts "h?v:r:" opt; do
     h|\?)
         usage
         exit 0
-        ;;  
-    v)  
+        ;;
+    v)
         KUBE_VERSION="${OPTARG}"
         ;;
     r)
@@ -47,6 +47,6 @@ if [[ ! "$PKG_REVISION" =~ ^[0-9]{1,2}$ ]]; then
     exit 1
 fi
 
-docker build --tag=debian-packager debian 
+docker build --tag=debian-packager debian
 docker run --volume="$(pwd)/debian:/src" --volume="${GOPATH}/src/k8s.io/kubernetes:/kubernetes" debian-packager \
     -arch amd64 --kube-version "$KUBE_VERSION" --pkg-revision "$PKG_REVISION"
