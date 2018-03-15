@@ -19,10 +19,10 @@ Summary: Container cluster management
 License: ASL 2.0
 
 URL: https://kubernetes.io
-Source0: https://dl.k8s.io/v%{KUBE_VERSION}/bin/linux/%{ARCH}/kubelet
+Source0: kubelet
 Source1: kubelet.service
-Source2: https://dl.k8s.io/v%{KUBE_VERSION}/bin/linux/%{ARCH}/kubectl
-Source3: https://dl.k8s.io/v%{KUBE_VERSION}/bin/linux/%{ARCH}/kubeadm
+#Source2: https://dl.k8s.io/v%{KUBE_VERSION}/bin/linux/%{ARCH}/kubectl
+#Source3: https://dl.k8s.io/v%{KUBE_VERSION}/bin/linux/%{ARCH}/kubeadm
 Source4: 10-kubeadm.conf
 Source5: https://dl.k8s.io/network-plugins/cni-%{ARCH}-%{CNI_RELEASE}.tar.gz
 
@@ -50,26 +50,26 @@ Requires: kubelet
 %description -n kubernetes-cni
 Binaries required to provision container networking.
 
-%package -n kubectl
+#%package -n kubectl
 
-Version: %{KUBE_VERSION}
-Release: %{RPM_RELEASE}
-Summary: Command-line utility for interacting with a Kubernetes cluster.
+#Version: %{KUBE_VERSION}
+#Release: %{RPM_RELEASE}
+#Summary: Command-line utility for interacting with a Kubernetes cluster.
 
-%description -n kubectl
-Command-line utility for interacting with a Kubernetes cluster.
+#%description -n kubectl
+#Command-line utility for interacting with a Kubernetes cluster.
 
-%package -n kubeadm
+#%package -n kubeadm
 
-Version: %{KUBE_VERSION}
-Release: %{RPM_RELEASE}
-Summary: Command-line utility for administering a Kubernetes cluster.
-Requires: kubelet >= 1.6.0
-Requires: kubectl >= 1.6.0
-Requires: kubernetes-cni
+#Version: %{KUBE_VERSION}
+#Release: %{RPM_RELEASE}
+#Summary: Command-line utility for administering a Kubernetes cluster.
+#Requires: kubelet >= 1.6.0
+#Requires: kubectl >= 1.6.0
+#Requires: kubernetes-cni
 
-%description -n kubeadm
-Command-line utility for administering a Kubernetes cluster.
+#%description -n kubeadm
+#Command-line utility for administering a Kubernetes cluster.
 
 %prep
 # Assumes the builder has overridden sourcedir to point to directory
@@ -91,8 +91,8 @@ ln -s 10-kubeadm-pre-1.8.conf %SOURCE4
 
 cp -p %SOURCE0 %{_builddir}/
 cp -p %SOURCE1 %{_builddir}/
-cp -p %SOURCE2 %{_builddir}/
-cp -p %SOURCE3 %{_builddir}/
+#cp -p %SOURCE2 %{_builddir}/
+#cp -p %SOURCE3 %{_builddir}/
 cp -p %SOURCE4 %{_builddir}/
 %setup -D -T -a 5 -n %{_builddir}/
 
@@ -106,10 +106,10 @@ install -m 755 -d %{buildroot}%{_sysconfdir}/cni/net.d/
 install -m 755 -d %{buildroot}%{_sysconfdir}/kubernetes/manifests/
 install -m 755 -d %{buildroot}/var/lib/kubelet/
 install -p -m 755 -t %{buildroot}%{_bindir}/ kubelet
-install -p -m 755 -t %{buildroot}%{_bindir}/ kubectl
-install -p -m 755 -t %{buildroot}%{_bindir}/ kubeadm
+#install -p -m 755 -t %{buildroot}%{_bindir}/ kubectl
+#install -p -m 755 -t %{buildroot}%{_bindir}/ kubeadm
 install -p -m 755 -t %{buildroot}%{_sysconfdir}/systemd/system/ kubelet.service
-install -p -m 755 -t %{buildroot}%{_sysconfdir}/systemd/system/kubelet.service.d/ 10-kubeadm.conf
+#install -p -m 755 -t %{buildroot}%{_sysconfdir}/systemd/system/kubelet.service.d/ 10-kubeadm.conf
 
 
 install -m 755 -d %{buildroot}/opt/cni
@@ -125,12 +125,12 @@ mv bin/ %{buildroot}/opt/cni/
 %files -n kubernetes-cni
 /opt/cni
 
-%files -n kubectl
-%{_bindir}/kubectl
+#%files -n kubectl
+#%{_bindir}/kubectl
 
-%files -n kubeadm
-%{_bindir}/kubeadm
-%{_sysconfdir}/systemd/system/kubelet.service.d/10-kubeadm.conf
+#%files -n kubeadm
+#%{_bindir}/kubeadm
+#%{_sysconfdir}/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 %doc
 

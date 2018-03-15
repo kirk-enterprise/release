@@ -66,6 +66,7 @@ var (
 	serverDistros = stringList{"xenial"}
 	allDistros    = stringList{"xenial", "jessie", "precise", "sid", "stretch", "trusty", "utopic", "vivid", "wheezy", "wily", "yakkety"}
 	kubeVersion   = ""
+	pkgRevision   = 0
 
 	builtins = map[string]interface{}{
 		"date": func() string {
@@ -80,6 +81,7 @@ func init() {
 	flag.Var(&architectures, "arch", "Architectures to build for.")
 	flag.Var(&serverDistros, "server-distros", "Server distros to build for.")
 	flag.Var(&allDistros, "distros", "Distros to build for.")
+	flag.IntVar(&pkgRevision, "pkg-revision", 0, "revision of package")
 	flag.StringVar(&kubeVersion, "kube-version", "", "Distros to build for.")
 }
 
@@ -443,6 +445,25 @@ func main() {
 				},
 			},
 		}
+	}
+
+	getSpecifiedVersion := func() (string, error) {
+		return kubeVersion, nil
+	}
+
+	builds = []build{
+		{
+			Package: "kubelet",
+			Distros: serverDistros,
+			Versions: []version{
+				{
+					GetVersion:       getSpecifiedVersion,
+					Revision:         fmt.Sprintf("%02d", pkgRevision),
+					Channel:          ChannelStable,
+					DownloadLinkBase: "file:///kubernetes/_output/local",
+				},
+			},
+		},
 	}
 
 	if err := walkBuilds(builds, func(pkg, distro, arch string, v version) error {
