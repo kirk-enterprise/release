@@ -1,7 +1,7 @@
 %global KUBE_MAJOR 1
 %global KUBE_MINOR 8
-%global KUBE_PATCH 0
-%global KUBE_VERSION %{KUBE_MAJOR}.%{KUBE_MINOR}.%{KUBE_PATCH}
+%global KUBE_PATCH 9
+%global KUBE_VERSION %{KUBE_MAJOR}.%{KUBE_MINOR}.%{KUBE_PATCH}_11+680cbac745fc4f
 %global CNI_RELEASE 0799f5732f2a11b329d9e3d51b9c8f2e3759f2ff
 %global RPM_RELEASE 0
 %global ARCH amd64
@@ -23,8 +23,8 @@ Source0: kubelet
 Source1: kubelet.service
 #Source2: https://dl.k8s.io/v%{KUBE_VERSION}/bin/linux/%{ARCH}/kubectl
 #Source3: https://dl.k8s.io/v%{KUBE_VERSION}/bin/linux/%{ARCH}/kubeadm
-Source4: 10-kubeadm.conf
-Source5: https://dl.k8s.io/network-plugins/cni-%{ARCH}-%{CNI_RELEASE}.tar.gz
+#Source4: 10-kubeadm.conf
+#Source5: https://dl.k8s.io/network-plugins/cni-%{ARCH}-%{CNI_RELEASE}.tar.gz
 
 
 BuildRequires: curl
@@ -40,15 +40,15 @@ Requires: ebtables
 %description
 The node agent of Kubernetes, the container cluster manager.
 
-%package -n kubernetes-cni
+# %package -n kubernetes-cni
 
-Version: 0.5.1
-Release: %{RPM_RELEASE}
-Summary: Binaries required to provision kubernetes container networking
-Requires: kubelet
+# Version: 0.5.1
+# Release: %{RPM_RELEASE}
+# Summary: Binaries required to provision kubernetes container networking
+# Requires: kubelet
 
-%description -n kubernetes-cni
-Binaries required to provision container networking.
+# %description -n kubernetes-cni
+# Binaries required to provision container networking.
 
 #%package -n kubectl
 
@@ -83,18 +83,18 @@ Binaries required to provision container networking.
 #   rpmbuild --define "_sourcedir $PWD" -bb kubelet.spec
 #
 
-%if %{KUBE_SEMVER} >= %{semver 1 8 0}
-ln -s 10-kubeadm-post-1.8.conf %SOURCE4
-%else
-ln -s 10-kubeadm-pre-1.8.conf %SOURCE4
-%endif
+# %if %{KUBE_SEMVER} >= %{semver 1 8 0}
+# ln -s 10-kubeadm-post-1.8.conf %SOURCE4
+# %else
+# ln -s 10-kubeadm-pre-1.8.conf %SOURCE4
+# %endif
 
 cp -p %SOURCE0 %{_builddir}/
 cp -p %SOURCE1 %{_builddir}/
 #cp -p %SOURCE2 %{_builddir}/
 #cp -p %SOURCE3 %{_builddir}/
-cp -p %SOURCE4 %{_builddir}/
-%setup -D -T -a 5 -n %{_builddir}/
+# cp -p %SOURCE4 %{_builddir}/
+# %setup -D -T -a 5 -n %{_builddir}/
 
 
 %install
@@ -102,19 +102,19 @@ cp -p %SOURCE4 %{_builddir}/
 install -m 755 -d %{buildroot}%{_bindir}
 install -m 755 -d %{buildroot}%{_sysconfdir}/systemd/system/
 install -m 755 -d %{buildroot}%{_sysconfdir}/systemd/system/kubelet.service.d/
-install -m 755 -d %{buildroot}%{_sysconfdir}/cni/net.d/
+# install -m 755 -d %{buildroot}%{_sysconfdir}/cni/net.d/
 install -m 755 -d %{buildroot}%{_sysconfdir}/kubernetes/manifests/
 install -m 755 -d %{buildroot}/var/lib/kubelet/
 install -p -m 755 -t %{buildroot}%{_bindir}/ kubelet
 #install -p -m 755 -t %{buildroot}%{_bindir}/ kubectl
 #install -p -m 755 -t %{buildroot}%{_bindir}/ kubeadm
 install -p -m 755 -t %{buildroot}%{_sysconfdir}/systemd/system/ kubelet.service
-#install -p -m 755 -t %{buildroot}%{_sysconfdir}/systemd/system/kubelet.service.d/ 10-kubeadm.conf
+# install -p -m 755 -t %{buildroot}%{_sysconfdir}/systemd/system/kubelet.service.d/ 10-kubeadm.conf
 
 
-install -m 755 -d %{buildroot}/opt/cni
+# install -m 755 -d %{buildroot}/opt/cni
 # bin directory from cni-amd64-%{CNI_RELEASE}.tar.gz with a list of cni plugins (among other things)
-mv bin/ %{buildroot}/opt/cni/
+# mv bin/ %{buildroot}/opt/cni/
 
 
 %files
@@ -122,8 +122,8 @@ mv bin/ %{buildroot}/opt/cni/
 %{_sysconfdir}/systemd/system/kubelet.service
 %{_sysconfdir}/kubernetes/manifests/
 
-%files -n kubernetes-cni
-/opt/cni
+# %files -n kubernetes-cni
+# /opt/cni
 
 #%files -n kubectl
 #%{_bindir}/kubectl
@@ -136,6 +136,9 @@ mv bin/ %{buildroot}/opt/cni/
 
 
 %changelog
+* Thu Mar 15 2018 Yecheng Fu <fuyecheng@qiniu.com> - 1.8.9-11+680cbac745fc4f
+- Bump version of kubelet and kubectl to v1.8.9-11+680cbac745fc4f.
+
 * Fri Sep 29 2017 Jacob Beacham <beacham@google.com> - 1.8.0
 - Bump version of kubelet and kubectl to v1.8.0.
 
