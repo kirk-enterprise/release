@@ -437,7 +437,7 @@ func main() {
 					GetVersion:       getSpecifiedVersion,
 					Revision:         fmt.Sprintf("%02d", pkgRevision),
 					Channel:          ChannelStable,
-					DownloadLinkBase: "file:///kubernetes/_output/local",
+					DownloadLinkBase: "file:///kubernetes/_output/dockerized",
 				},
 			},
 		},

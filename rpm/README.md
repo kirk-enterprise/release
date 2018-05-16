@@ -8,7 +8,7 @@ For our usage, we only package kubelet and kubernetes-cni.
 cd $GOPATH/src/k8s.io/release
 git checkout kirk-release
 cd rpm
-cp $GOPATH/src/k8s.io/kubernetes/_output/bin/kubelet .
+cp $GOPATH/src/k8s.io/kubernetes/_output/dockerized/bin/linux/amd64/kubelet .
 ```
 
 ## 更新 kubelet.spec
