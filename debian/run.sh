@@ -13,7 +13,7 @@ Usage: $(basename $0) -v <kubeVersion> -r <pkgVersion>
 
 Examples:
 
-    $(basename $0) -v 1.7.3-15+f2fa44d6d7b2cf -r 0
+    $(basename $0) -v v1.7.3-15+f2fa44d6d7b2cf -r 0
 EOF
 }
 
@@ -35,11 +35,12 @@ while getopts "h?v:r:" opt; do
     esac
 done
 
-if [[ ! "$KUBE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+(\+[0-9a-z]{14})?)?$ ]]; then
+if [[ ! "$KUBE_VERSION" =~ ^v?([0-9]+\.[0-9]+\.[0-9]+(-[0-9]+(\+[0-9a-z]{14})?)?)$ ]]; then
     echo "error: invalid kube version, e.g. 1.7.3-15+f2fa44d6d7b2cf"
     usage
     exit 1
 fi
+KUBE_VERSION="${BASH_REMATCH[1]}"
 
 if [[ ! "$PKG_REVISION" =~ ^[0-9]{1,2}$ ]]; then
     echo "error: invalid pkg revision, should be a number, range from 0-99, e.g. 0, 1, 2."
