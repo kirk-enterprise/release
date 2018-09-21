@@ -3,7 +3,7 @@ set -e
 
 # update kubelet.spec
 DATE=$(date +'%a %b %d %Y')
-VERSION=$(./kubelet --version | cut -d ' ' -f 2 | tr -s '-' '_')
+VERSION=$(./kubelet --version | cut -d ' ' -f 2 | tr -s '-' '_' | sed 's/^v//')
 echo "DATE: $DATE"
 echo "VERSION: $VERSION"
 
