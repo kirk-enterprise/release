@@ -35,7 +35,7 @@ while getopts "h?v:r:" opt; do
     esac
 done
 
-if [[ ! "$KUBE_VERSION" =~ ^v?([0-9]+\.[0-9]+\.[0-9]+(-[0-9]+(\+[0-9a-z]{14})?)?)$ ]]; then
+if [[ ! "$KUBE_VERSION" =~ ^v?([0-9]+\.[0-9]+\.[0-9]+(-([a-z0-9]+)(\.[a-z0-9]+)*(\+[0-9a-z]{14})?)?)$ ]]; then
     echo "error: invalid kube version, e.g. 1.7.3-15+f2fa44d6d7b2cf"
     usage
     exit 1
